@@ -21,6 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
+
+// Returns a list all timers
 app.get('/api/timers', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     res.setHeader('Cache-Control', 'no-cache');
@@ -28,6 +30,10 @@ app.get('/api/timers', (req, res) => {
   });
 });
 
+
+// Accepts a JSON body with title, project,
+// and id attributes. Will insert a new timer
+// object into its store.
 app.post('/api/timers', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     const timers = JSON.parse(data);
@@ -46,6 +52,10 @@ app.post('/api/timers', (req, res) => {
   });
 });
 
+
+// Accepts a JSON body with the attribute id and start (a timestamp).
+// Hunts through its store and finds the timer with the matching id.
+// Sets its runningSince to start.
 app.post('/api/timers/start', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     const timers = JSON.parse(data);
@@ -60,6 +70,11 @@ app.post('/api/timers/start', (req, res) => {
   });
 });
 
+
+// Accepts a JSON body with the attribute id and stop (a timestamp).
+// Hunts through its store and finds the timer with the matching id.
+// Updates elapsed according to how long the timer has been running
+// (stop - runningSince). Sets runningSince to null.
 app.post('/api/timers/stop', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     const timers = JSON.parse(data);
@@ -76,6 +91,10 @@ app.post('/api/timers/stop', (req, res) => {
   });
 });
 
+
+// Accepts a JSON body with the attributes id and title and/or project.
+// Hunts through its store and finds the timer with the matching id.
+// Updates title and/or project to new attributes.
 app.put('/api/timers', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     const timers = JSON.parse(data);
@@ -91,6 +110,9 @@ app.put('/api/timers', (req, res) => {
   });
 });
 
+
+// Accepts a JSON body with the attribute id.
+// Hunts through its store and deletes the timer with the matching id.
 app.delete('/api/timers', (req, res) => {
   fs.readFile(DATA_FILE, (err, data) => {
     let timers = JSON.parse(data);
@@ -107,11 +129,13 @@ app.delete('/api/timers', (req, res) => {
   });
 });
 
+
 app.get('/molasses', (_, res) => {
   setTimeout(() => {
     res.end();
   }, 5000);
 });
+
 
 app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
